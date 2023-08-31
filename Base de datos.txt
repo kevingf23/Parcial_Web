@@ -1,0 +1,194 @@
+
+-- --------------------------------------------------
+-- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
+-- --------------------------------------------------
+-- Date Created: 08/30/2023 23:39:16
+-- Generated from EDMX file: C:\Users\Usuario\source\repos\Gabyta69\Parcial\Parcial\Models\Model1.edmx
+-- --------------------------------------------------
+
+Create Database FA100620
+
+SET QUOTED_IDENTIFIER OFF;
+GO
+USE FA100620;
+GO
+IF SCHEMA_ID(N'dbo') IS NULL EXECUTE(N'CREATE SCHEMA [dbo]');
+GO
+
+-- --------------------------------------------------
+-- Dropping existing FOREIGN KEY constraints
+-- --------------------------------------------------
+
+
+-- --------------------------------------------------
+-- Dropping existing tables
+-- --------------------------------------------------
+
+IF OBJECT_ID(N'[dbo].[Cursos]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Cursos];
+GO
+IF OBJECT_ID(N'[dbo].[Estudiantes]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Estudiantes];
+GO
+IF OBJECT_ID(N'[dbo].[InscripcionMaterias]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[InscripcionMaterias];
+GO
+IF OBJECT_ID(N'[dbo].[Roles]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Roles];
+GO
+IF OBJECT_ID(N'[dbo].[sysdiagrams]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[sysdiagrams];
+GO
+IF OBJECT_ID(N'[dbo].[Usuarios]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Usuarios];
+GO
+IF OBJECT_ID(N'[RC101320ModelStoreContainer].[Carreras]', 'U') IS NOT NULL
+    DROP TABLE [RC101320ModelStoreContainer].[Carreras];
+GO
+
+-- --------------------------------------------------
+-- Creating all tables
+-- --------------------------------------------------
+
+-- Creating table 'Usuarios'
+CREATE TABLE [dbo].[Usuarios] (
+    [User] nvarchar(100)  NOT NULL,
+    [Password] nvarchar(100)  NOT NULL,
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [Rol] int  NULL
+);
+GO
+
+-- Creating table 'Carreras'
+CREATE TABLE [dbo].[Carreras] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [Nombre] nvarchar(50)  NOT NULL,
+    [Descripcion] nvarchar(1000)  NOT NULL
+);
+GO
+
+-- Creating table 'Roles'
+CREATE TABLE [dbo].[Roles] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [Rol] nvarchar(50)  NOT NULL,
+    [IdRol] int  NOT NULL
+);
+GO
+
+-- Creating table 'Cursos'
+CREATE TABLE [dbo].[Cursos] (
+    [cursoID] int IDENTITY(1,1) NOT NULL,
+    [nombreCurso] varchar(50)  NOT NULL
+);
+GO
+
+-- Creating table 'Estudiantes'
+CREATE TABLE [dbo].[Estudiantes] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [UsuarioId] int  NOT NULL,
+    [Email] varchar(50)  NOT NULL,
+    [Curso] varchar(100)  NULL
+);
+GO
+
+-- Creating table 'InscripcionMaterias'
+CREATE TABLE [dbo].[InscripcionMaterias] (
+    [UsuarioCursoID] int  NOT NULL,
+    [UserID] int  NULL,
+    [CursoID] int  NULL
+);
+GO
+
+-- Creating table 'sysdiagrams'
+CREATE TABLE [dbo].[sysdiagrams] (
+    [name] nvarchar(128)  NOT NULL,
+    [principal_id] int  NOT NULL,
+    [diagram_id] int IDENTITY(1,1) NOT NULL,
+    [version] int  NULL,
+    [definition] varbinary(max)  NULL
+);
+GO
+
+-- --------------------------------------------------
+-- Creating all PRIMARY KEY constraints
+-- --------------------------------------------------
+
+-- Creating primary key on [Id] in table 'Usuarios'
+ALTER TABLE [dbo].[Usuarios]
+ADD CONSTRAINT [PK_Usuarios]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id], [Nombre], [Descripcion] in table 'Carreras'
+ALTER TABLE [dbo].[Carreras]
+ADD CONSTRAINT [PK_Carreras]
+    PRIMARY KEY CLUSTERED ([Id], [Nombre], [Descripcion] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Roles'
+ALTER TABLE [dbo].[Roles]
+ADD CONSTRAINT [PK_Roles]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [cursoID] in table 'Cursos'
+ALTER TABLE [dbo].[Cursos]
+ADD CONSTRAINT [PK_Cursos]
+    PRIMARY KEY CLUSTERED ([cursoID] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Estudiantes'
+ALTER TABLE [dbo].[Estudiantes]
+ADD CONSTRAINT [PK_Estudiantes]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [UsuarioCursoID] in table 'InscripcionMaterias'
+ALTER TABLE [dbo].[InscripcionMaterias]
+ADD CONSTRAINT [PK_InscripcionMaterias]
+    PRIMARY KEY CLUSTERED ([UsuarioCursoID] ASC);
+GO
+
+-- Creating primary key on [diagram_id] in table 'sysdiagrams'
+ALTER TABLE [dbo].[sysdiagrams]
+ADD CONSTRAINT [PK_sysdiagrams]
+    PRIMARY KEY CLUSTERED ([diagram_id] ASC);
+GO
+
+-- --------------------------------------------------
+-- Creating all FOREIGN KEY constraints
+-- --------------------------------------------------
+
+-- Creating foreign key on [CursoID] in table 'InscripcionMaterias'
+ALTER TABLE [dbo].[InscripcionMaterias]
+ADD CONSTRAINT [FK__Inscripci__Curso__2A164134]
+    FOREIGN KEY ([CursoID])
+    REFERENCES [dbo].[Cursos]
+        ([cursoID])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK__Inscripci__Curso__2A164134'
+CREATE INDEX [IX_FK__Inscripci__Curso__2A164134]
+ON [dbo].[InscripcionMaterias]
+    ([CursoID]);
+GO
+
+-- Creating foreign key on [UserID] in table 'InscripcionMaterias'
+ALTER TABLE [dbo].[InscripcionMaterias]
+ADD CONSTRAINT [FK__Inscripci__UserI__29221CFB]
+    FOREIGN KEY ([UserID])
+    REFERENCES [dbo].[Usuarios]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK__Inscripci__UserI__29221CFB'
+CREATE INDEX [IX_FK__Inscripci__UserI__29221CFB]
+ON [dbo].[InscripcionMaterias]
+    ([UserID]);
+GO
+
+-- --------------------------------------------------
+-- Script has ended
+-- --------------------------------------------------
