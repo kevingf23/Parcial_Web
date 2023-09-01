@@ -9,7 +9,7 @@ namespace Parcial.Controllers
 {
     public class HomeController : Controller
     {
-        private RC101320Entities1 db = new RC101320Entities1();
+        private DBEntities db = new DBEntities();
 
         public ActionResult Index()
         {

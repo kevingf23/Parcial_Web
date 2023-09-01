@@ -9,7 +9,7 @@ namespace Parcial.Controllers
     public class AccessController : Controller
     {
         // GET: Access
-        private RC101320Entities1 db = new RC101320Entities1();
+        private DBEntities _dbContext = new DBEntities();
        
         public ActionResult Login()
         {
@@ -19,7 +19,7 @@ namespace Parcial.Controllers
         [HttpPost]
         public ActionResult Login(string user, string password)
         {
-            var usuario = db.Usuarios.FirstOrDefault(u => u.User == user);
+            var usuario = _dbContext.Usuarios.FirstOrDefault(u => u.User == user);
 
             if (usuario != null && BCrypt.Net.BCrypt.Verify(password, usuario.Password))
             {
@@ -45,14 +45,14 @@ namespace Parcial.Controllers
         public ActionResult Register(string nuevoUsuario, string nuevaContraseña)
         {
             // Verificar si el usuario ya existe
-            if (db.Usuarios.Any(u => u.User == nuevoUsuario))
+            if (_dbContext.Usuarios.Any(u => u.User == nuevoUsuario))
             {
                 ViewBag.RegistrationError = "El usuario ya existe";
                 return View("Login", "Access"); // Redirige a la vista de registro
             }
 
             // Ejecutar el procedimiento almacenado para insertar el nuevo usuario
-            db.Database.ExecuteSqlCommand("InsertarUsuario @NuevoUsuario, @NuevaContraseña",
+            _dbContext.Database.ExecuteSqlCommand("InsertarUsuario @NuevoUsuario, @NuevaContraseña",
                 new SqlParameter("NuevoUsuario", nuevoUsuario),
                 new SqlParameter("NuevaContraseña", BCrypt.Net.BCrypt.HashPassword(nuevaContraseña)));
 

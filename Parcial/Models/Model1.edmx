@@ -5,8 +5,6 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="RC101320Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'RC101320.dbo.Carreras' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="Carreras">
           <Key>
             <PropertyRef Name="Id" />
@@ -37,7 +35,7 @@ advertencia 6002: La tabla o vista 'RC101320.dbo.Carreras' no tiene definida nin
           <Key>
             <PropertyRef Name="UsuarioCursoID" />
           </Key>
-          <Property Name="UsuarioCursoID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UsuarioCursoID" Type="int" Nullable="false" />
           <Property Name="UserID" Type="int" />
           <Property Name="CursoID" Type="int" />
         </EntityType>
@@ -63,30 +61,51 @@ advertencia 6002: La tabla o vista 'RC101320.dbo.Carreras' no tiene definida nin
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="User" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Rol" Type="int" />
         </EntityType>
-        <Function Name="InsertarUsuario" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="NuevoUsuario" Type="nvarchar" Mode="In" />
-          <Parameter Name="NuevaContraseña" Type="nvarchar" Mode="In" />
-        </Function>
-        <Function Name="ObtenerCarreras" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Association Name="FK__Inscripci__Curso__2A164134">
+          <End Role="Cursos" Type="Self.Cursos" Multiplicity="0..1" />
+          <End Role="InscripcionMaterias" Type="Self.InscripcionMaterias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cursos">
+              <PropertyRef Name="cursoID" />
+            </Principal>
+            <Dependent Role="InscripcionMaterias">
+              <PropertyRef Name="CursoID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Inscripci__UserI__29221CFB">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="0..1" />
+          <End Role="InscripcionMaterias" Type="Self.InscripcionMaterias" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="InscripcionMaterias">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="RC101320ModelStoreContainer">
+          <EntitySet Name="Carreras" EntityType="Self.Carreras" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Cursos" EntityType="Self.Cursos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Estudiantes" EntityType="Self.Estudiantes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InscripcionMaterias" EntityType="Self.InscripcionMaterias" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Carreras" EntityType="Self.Carreras" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Carreras].[Id] AS [Id], 
-    [Carreras].[Nombre] AS [Nombre], 
-    [Carreras].[Descripcion] AS [Descripcion]
-    FROM [dbo].[Carreras] AS [Carreras]</DefiningQuery>
-          </EntitySet>
+          <AssociationSet Name="FK__Inscripci__Curso__2A164134" Association="Self.FK__Inscripci__Curso__2A164134">
+            <End Role="Cursos" EntitySet="Cursos" />
+            <End Role="InscripcionMaterias" EntitySet="InscripcionMaterias" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Inscripci__UserI__29221CFB" Association="Self.FK__Inscripci__UserI__29221CFB">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="InscripcionMaterias" EntitySet="InscripcionMaterias" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -233,16 +252,6 @@ advertencia 6002: La tabla o vista 'RC101320.dbo.Carreras' no tiene definida nin
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="InsertarUsuario" FunctionName="RC101320Model.Store.InsertarUsuario" />
-          <FunctionImportMapping FunctionImportName="ObtenerCarreras" FunctionName="RC101320Model.Store.ObtenerCarreras">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="RC101320Model.ObtenerCarreras_Result">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <EntitySetMapping Name="Roles">
             <EntityTypeMapping TypeName="RC101320Model.Role">
               <MappingFragment StoreEntitySet="Roles">

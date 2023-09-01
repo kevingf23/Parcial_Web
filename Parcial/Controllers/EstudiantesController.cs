@@ -12,7 +12,7 @@ namespace Parcial.Controllers
     public class EstudianteController : Controller
     {
 
-        private RC101320Entities1 db = new RC101320Entities1();
+        private DBEntities db = new DBEntities();
 
         public ActionResult Index()
         {
